@@ -1,0 +1,28 @@
+{
+  "name": "12sprint",
+  "version": "1.0.0",
+  "description": "yandex praktikum sprint 12",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon app.js",
+    "start": "node app.js"
+  },
+  "author": "Ezhuchenkov Alexandr",
+  "license": "ISC",
+  "dependencies": {
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "express": "^4.17.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ezhuchenkov/12sprint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ezhuchenkov/12sprint/issues"
+  },
+  "homepage": "https://github.com/ezhuchenkov/12sprint#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}
