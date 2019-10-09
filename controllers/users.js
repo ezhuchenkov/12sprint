@@ -1,5 +1,5 @@
 const User = require('../models/user');
-export const errorMessage = { message: 'Произошла ошибка' };
+const errorMessage = { message: 'Произошла ошибка' };
 
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -8,6 +8,7 @@ module.exports.createUser = (req, res) => {
     .then(user => res.send({ data: user }))
     .catch(err => res.status(500).send(errorMessage));
 };
+
 
 module.exports.getAllUsers = (req, res) => {
   User.find({})
