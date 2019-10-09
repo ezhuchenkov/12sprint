@@ -1,5 +1,4 @@
 const express = require('express')
-const path = require('path')
 const usersRoute = require('./routes/users')
 const cardsRoute = require('./routes/cards')
 const mongoose = require('mongoose');
@@ -11,12 +10,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use((req, res, next) => {
-  req.user = {
-    _id: '5d9dbaa2b4c7ac154caeaf12'
-  };
+ req.user = {
+   _id: '5d9dbaa2b4c7ac154caeaf12'
+   };
 
-  next();
-});
+   next();
+ });
 
 mongoose.connect('mongodb://localhost:27017/mestodb', {
     useNewUrlParser: true,
@@ -24,7 +23,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
     useFindAndModify: false
 });
 
-app.use(express.static(path.join(__dirname, 'public')))
+
 app.use('/users', usersRoute)
 app.use('/cards', cardsRoute)
 app.get('*', (req, res) => {
