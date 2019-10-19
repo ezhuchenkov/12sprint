@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const Card = require('../models/card')
 
 const errorMessage = { message: 'Произошла ошибка' }
@@ -20,7 +21,14 @@ module.exports.getAllCards = (req, res) => {
 }
 
 module.exports.deleteCardById = (req, res) => {
-  Card.findByIdAndRemove(req.params.id)
-    .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send(errorMessage))
+  Card.findById(req.params.id)
+  // eslint-disable-next-line consistent-return
+    .then((card) => {
+      if (!card) return Promise.reject(new Error(errorMessage))
+      if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) { return Promise.reject(new Error(errorMessage)) }
+      Card.remove(card)
+        .then((removedCard) => res.send(removedCard !== null ? { data: card } : { data: 'Такого объекта не существует' }))
+        .catch(() => res.status(500).send({ errorMessage }))
+    })
+    .catch(() => res.status(500).send({ errorMessage }))
 }
