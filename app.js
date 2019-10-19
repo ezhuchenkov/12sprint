@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const usersRoute = require('./routes/users')
 const cardsRoute = require('./routes/cards')
+const { createUser, login } = require('./controllers/users')
 
 const { PORT = 3000 } = process.env
 const app = express()
@@ -29,6 +30,8 @@ app.use('/cards', cardsRoute)
 app.get('*', (req, res) => {
   res.status(404).send({ message: 'Page not found' })
 })
+app.post('/signin', login)
+app.post('/signup', createUser)
 
 app.listen(PORT, () => {
   console.log('App is listening to port ', PORT)
