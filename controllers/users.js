@@ -2,6 +2,7 @@ import { find, findById } from '../models/user'
 
 // eslint-disable-next-line import/no-unresolved
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 
 
@@ -27,6 +28,29 @@ export function createUser(req, res) {
     })
     .catch(() => {
       res.status(400).send(errorMessage)
+    })
+}
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        process.env.SECRET_KEY,
+        { expiresIn: '7d' },
+      )
+      res
+        .status(201)
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+          sameSite: true,
+        }).send({ message: 'Добро пожаловать!' })
+    })
+    .catch(() => {
+      res.status(401).send({ errorMessage })
     })
 }
 
