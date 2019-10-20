@@ -1,5 +1,3 @@
-import { find, findById } from '../models/user'
-
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
@@ -7,7 +5,7 @@ const User = require('../models/user')
 
 const errorMessage = { message: 'Произошла ошибка' }
 
-export function createUser(req, res) {
+module.exports.createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
   } = req.body
@@ -53,13 +51,13 @@ module.exports.login = (req, res) => {
     })
 }
 
-export function getAllUsers(req, res) {
-  find({})
+module.exports.getAllUsers = (req, res) => {
+  User.find({})
     .then((users) => res.send({ data: users }))
     .catch(() => res.status(500).send(errorMessage))
 }
-export function getUserById(req, res) {
-  findById(req.params.id)
+module.exports.getUserById = (req, res) => {
+  User.findById(req.params.id)
     .then((user) => res.send({ data: user }))
     .catch(() => res.status(500).send(errorMessage))
 }
