@@ -35,7 +35,7 @@ module.exports.login = (req, res) => {
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
-        process.env.SECRET_KEY,
+        'secret-key',
         { expiresIn: '7d' },
       )
       res
