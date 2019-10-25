@@ -1,11 +1,10 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user')
+const RequestError = require('../errors/req-err')
+const AuthError = require('../errors/auth-err')
 
-
-const errorMessage = { message: 'Произошла ошибка' }
-
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body
@@ -19,20 +18,24 @@ module.exports.createUser = (req, res) => {
       password: hash,
     }))
     .then((user) => {
+      if (!user) {
+        throw new RequestError('Что-то не так с данными пользователя')
+      }
       res.status(201).send({
         _id: user._id, name: user.name, about: user.about, email: user.email,
       })
     })
-    .catch(() => {
-      res.status(400).send(errorMessage)
-    })
+    .catch(next)
 }
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
+      if (!user) {
+        throw new AuthError('Ошибка авторизации')
+      }
       const token = jwt.sign(
         { _id: user._id },
         'secret-key',
@@ -46,18 +49,16 @@ module.exports.login = (req, res) => {
           sameSite: true,
         }).send({ message: 'Добро пожаловать!' })
     })
-    .catch(() => {
-      res.status(401).send({ errorMessage })
-    })
+    .catch(next)
 }
 
-module.exports.getAllUsers = (req, res) => {
+module.exports.getAllUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch(() => res.status(500).send(errorMessage))
+    .catch(next)
 }
-module.exports.getUserById = (req, res) => {
+module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send(errorMessage))
+    .catch(next)
 }
