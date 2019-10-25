@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "jest"
   },
   "author": "Ezhuchenkov Alexandr",
   "license": "ISC",
@@ -32,6 +33,7 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-airbnb-standard": "^3.0.1",
     "eslint-plugin-import": "^2.18.2",
-    "nodemon": "^1.19.3"
+    "nodemon": "^1.19.3",
+    "supertest": "^4.0.2"
   }
 }
