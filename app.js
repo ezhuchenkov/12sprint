@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const { celebrate, Joi, errors } = require('celebrate')
+const { requestLogger, errorLogger } = require('./middlewares/logger')
 const usersRoute = require('./routes/users')
 const cardsRoute = require('./routes/cards')
 const urlRegExp = require('./models/card')
@@ -18,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
   useCreateIndex: true,
   useFindAndModify: false,
 })
+app.use(requestLogger)
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
@@ -42,6 +44,7 @@ app.use('/cards', cardsRoute)
 app.get('*', (req, res) => {
   res.status(404).send({ message: 'Page not found' })
 })
+app.use(errorLogger)
 app.use(errors())
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
