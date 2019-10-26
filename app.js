@@ -4,7 +4,6 @@ const { celebrate, Joi, errors } = require('celebrate')
 const { requestLogger, errorLogger } = require('./middlewares/logger')
 const usersRoute = require('./routes/users')
 const cardsRoute = require('./routes/cards')
-const urlRegExp = require('./models/card')
 const { createUser, login } = require('./controllers/users')
 const auth = require('./middlewares/auth')
 
@@ -30,7 +29,8 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
-    avatar: Joi.string().required().regex(urlRegExp),
+    // eslint-disable-next-line no-useless-escape
+    avatar: Joi.string().required().regex(/^((http|https)):\/\/(www\.)?((\d{3}\.\d{1,3}\.\d{1,3}\.\d{1,3}(:\d{1,5})?)|([A-z]+(\.[\w-]+)?\.[A-z]{2,4}))(\/[\w-\/]+)?#?/),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
