@@ -3,6 +3,9 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const RequestError = require('../errors/req-err')
 const AuthError = require('../errors/auth-err')
+require('dotenv').config()
+
+const { NODE_ENV, JWT_SECRET } = process.env
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -38,7 +41,7 @@ module.exports.login = (req, res, next) => {
       }
       const token = jwt.sign(
         { _id: user._id },
-        'secret-key',
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
         { expiresIn: '7d' },
       )
       res
