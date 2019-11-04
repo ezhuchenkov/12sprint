@@ -24,7 +24,7 @@ module.exports.createUser = (req, res, next) => {
       if (!user) {
         throw new RequestError('Что-то не так с данными пользователя')
       }
-      res.status(201).send({
+      return res.status(201).send({
         _id: user._id, name: user.name, about: user.about, email: user.email,
       })
     })
