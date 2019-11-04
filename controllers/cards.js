@@ -1,34 +1,35 @@
 /* eslint-disable max-len */
 const Card = require('../models/card')
+const NotFoundError = require('../errors/not-found-err')
+const AuthError = require('../errors/auth-err')
 
-const errorMessage = { message: 'Произошла ошибка' }
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body
   const owner = req.user._id
 
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send(errorMessage))
+    .catch(next)
 }
 
 
-module.exports.getAllCards = (req, res) => {
+module.exports.getAllCards = (req, res, next) => {
   Card.find({})
     .populate('owner')
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send(errorMessage))
+    .catch(next)
 }
 
-module.exports.deleteCardById = (req, res) => {
+module.exports.deleteCardById = (req, res, next) => {
   Card.findById(req.params.id)
   // eslint-disable-next-line consistent-return
     .then((card) => {
-      if (!card) return Promise.reject(new Error(errorMessage))
-      if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) { return Promise.reject(new Error(errorMessage)) }
+      if (!card) return Promise.reject(new NotFoundError('Указанная карточка не найдена'))
+      if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) { return Promise.reject(new AuthError('Вы не являетесь автором карточки')) }
       Card.remove(card)
         .then((removedCard) => res.send(removedCard !== null ? { data: card } : { data: 'Такого объекта не существует' }))
-        .catch(() => res.status(500).send({ errorMessage }))
+        .catch(next)
     })
-    .catch(() => res.status(500).send({ errorMessage }))
+    .catch(next)
 }
