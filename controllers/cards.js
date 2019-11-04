@@ -2,14 +2,19 @@
 const Card = require('../models/card')
 const NotFoundError = require('../errors/not-found-err')
 const AuthError = require('../errors/auth-err')
-
+const RequestError = require('../errors/req-err')
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body
   const owner = req.user._id
 
   Card.create({ name, link, owner })
-    .then((card) => res.send({ data: card }))
+    .then((card) => {
+      if (!card) {
+        throw new RequestError('Ошибка создания карты')
+      }
+      res.send({ data: card })
+    })
     .catch(next)
 }
 

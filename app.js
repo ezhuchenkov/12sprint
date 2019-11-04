@@ -42,12 +42,12 @@ app.post('/signup', celebrate({
   }),
 
 }), createUser)
-app.use(auth)
 app.use('/users', usersRoute)
 app.use('/cards', cardsRoute)
-app.get('*', (req, res) => {
+app.use('*', (req, res) => {
   res.status(404).send({ message: 'Page not found' })
 })
+app.use(auth)
 app.use(errorLogger)
 app.use(errors())
 // eslint-disable-next-line no-unused-vars
