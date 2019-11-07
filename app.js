@@ -6,7 +6,7 @@ const { celebrate, Joi, errors } = require('celebrate')
 const { requestLogger, errorLogger } = require('./middlewares/logger')
 const usersRoute = require('./routes/users')
 const cardsRoute = require('./routes/cards')
-const { createUser, login, getUserById } = require('./controllers/users')
+const { createUser, login } = require('./controllers/users')
 const auth = require('./middlewares/auth')
 
 const { PORT = 3000 } = process.env
@@ -48,7 +48,6 @@ app.post('/signup', celebrate({
 app.use(auth)
 app.use('/users', usersRoute)
 app.use('/cards', cardsRoute)
-app.use('/users/:id', getUserById)
 app.use('*', (req, res) => {
   res.status(404).send({ message: 'Page not found' })
 })
