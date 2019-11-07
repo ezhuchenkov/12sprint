@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const RequestError = require('../errors/req-err')
 const AuthError = require('../errors/auth-err')
+const NotFoundError = require('../errors/not-found-err')
 require('dotenv').config()
 
 const { NODE_ENV, JWT_SECRET } = process.env
@@ -62,6 +63,10 @@ module.exports.getAllUsers = (req, res, next) => {
 }
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
-    .catch(next)
+    .then((user) => {
+      if (user) {
+        res.send({ data: user })
+      }
+    })
+    .catch(() => next(new NotFoundError('Такого пользователя не существует')))
 }
