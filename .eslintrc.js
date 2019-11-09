@@ -10,13 +10,8 @@ module.exports = {
         "SharedArrayBuffer": "readonly"
     },
     "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
+        "ecmaVersion": 2018
     },
     "rules": {
-      "semi": ["error", "never"],
-      "prefer-rest-params": 0,
-      "no-console": 0,
-      "no-underscore-dangle": 0
     }
 };
